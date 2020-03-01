@@ -1,0 +1,7 @@
+{
+    "python.linting.pylintEnabled": true,
+    "workbench.editor.enablePreview": false, 
+    "autoDocstring.docstringFormat": "sphinx",
+    "editor.rulers": [80,120],
+    "python.linting.enabled": true
+}
