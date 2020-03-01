@@ -7,6 +7,9 @@
 # Created:     16-12-2019
 # Copyright:   (c) MRDOUVIL 2019
 # Licence:     <your licence>
+# dependent on https://github.com/EMCECS/python-ecsclient 
+# TODO: build envioment with requirements list needs to be deployed before running
+# TODO: parameters and encrypted password settings need to be in runtime env properly
 #-------------------------------------------------------------------------------
 
 import random
