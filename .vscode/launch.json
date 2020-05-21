@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+
+
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "create_S3bucket_and_user.py",
+            "args": [
+                "--user", "michelle.douville@gov.bc.ca",
+                "--password", "<idir password here>",
+                "listusers"
+            ],
+            "console": "integratedTerminal"
+        }
+    ]
+}
