@@ -25,7 +25,7 @@ def parse_args():
     print ('Number of arguments:', len(sys.argv), 'arguments.')
     print ('Argument List:', str(sys.argv))
 
-    syntaxcmd = 'create_s3bucket_and_user.py <command - createuser, createbucket, listuser, listbucket> -u <DELLNamespace_adminuser> -p <DellNamespace_adminpassword> -n <namepspace - default is "nrs"> <inputcsvfile> -c <categoriesfile> -t <datestampcolname> -s <servicenamecolname>'
+    syntaxcmd = 'create_s3bucket_and_user.py <command - createuser, createbucket, listuser, listbucket> -u <DELLNamespace_adminuser> -p <DellNamespace_adminpassword> -n <namepspace - default is "nrs">'
 
     if len(sys.argv) < 2:
         print (syntaxcmd)
@@ -52,11 +52,6 @@ def parse_args():
 
     parser.add_argument("-e", "--endpoint",  dest="endpoint", default="https://mgmt.objectstore.gov.bc.ca:4443", required=False, help="REST Endpoint to access DELL management API (default is 'https://mgmt.objectstore.gov.bc.ca:4443')", metavar='String', type=str)
     args = parser.parse_args()
-
-
-    
-
-    
     
     ##################
     parser = argparse.ArgumentParser(description="command line client")
@@ -114,6 +109,7 @@ def login(user, password):
         password = getpass.getpass()    
     print("user:", user)
     print("password:", password)
+
 # login to the administrative DELL ECS API
 def adminLogin(user, password, endpoint):
     client = Client('3',
@@ -127,16 +123,19 @@ def adminLogin(user, password, endpoint):
     print(client.user_info.whoami())
     print()
     return client
+
 # generate a random string used for bucket naming
 def randomString(stringLength=10):
     """Generate a random string of fixed length """
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(stringLength))
+
 # create a user in the Dell appliance based on command line inputs
 def createUser(objectuser,namespace, client):
     print ("Creating DELL ECS User account")
     client.object_user.create(objectuser,namespace)
     print('created user "'+objectuser+'"in namepace - '+namespace)
+    
 # create a bucket in the Dell appliance based on command line inputs
 def createBucket(encryption_enabled,replicationgroup,namespace,client):
     print ("Creating DELL ECS Bucket")
@@ -147,12 +146,14 @@ def createBucket(encryption_enabled,replicationgroup,namespace,client):
     bucketname = randombucketname()
     print ('creating bucket:  '+bucketname)
     client.bucket.create(bucketname,replicationgroup,False,None,namespace,False,metadata,encryption_enabled)
+    
 # list the buckets in the Dell appliance based on command line inputs
 def listBuckets(namespace,client):
     print ('List of buckets within the '+namespace+ ' namespace:')
 
     bucket = client.bucket.list(namespace)
     print(bucket)
+    
 # list the users in the Dell appliance based on command line inputs
 def listUsers(namespace,client):
     userslist = client.object_user.list()
@@ -160,6 +161,7 @@ def listUsers(namespace,client):
     print('List of Object users with the '+namespace+ ' namespace:')
     for user in users:
         print( user)
+        
 # generate a random bucket name based on length given - standard/default is six
 def randombucketname():
     randomname = randomString(6)
