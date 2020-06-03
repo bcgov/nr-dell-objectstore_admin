@@ -32,23 +32,34 @@ def parse_args():
         sys.exit(2)
 
     parser = argparse.ArgumentParser(description="command line client")
+    subparser = parser.add_subparsers(dest='command', metavar='command')
+    subparser.required = True
     parser.set_defaults(funct=argparser_handler)
 
-    parser.add_argument('-u', dest='user', help='user.  If this argument is not passed it will be requested.', metavar="user", type=str)
-    parser.add_argument('-p', dest='password', help='password.  If this argument is not passed it will be requested.', metavar="password", type=str)             
-    parser.add_argument("-", "--command",  dest="command", required=True,  help="specify the action/command to run - createuser, createbuckets, listuser, listbucket", metavar="command", type=str)
-    parser.add_argument("-r", "--replicationgroup",  dest="replicationgroup", default="urn:storageos:ReplicationGroupInfo:4759217e-b060-4abb-a100-6a50686d6cf8:global", required=False, help="replication group with the DELL APplicance (default is 'urn:storageos:ReplicationGroupInfo:4759217e-b060-4abb-a100-6a50686d6cf8:global'", metavar='replication group', type=str)
-    parser.add_argument("-ou", "--objectuser",  dest="objectuser", required=False, help="Object User to Create if function is set to 'createUser'", metavar='objectuser', type=str)
-    parser.add_argument("-n", "--namespace",  dest="namespace", default="nrs", required=False, help="namespace to access in object storage (default is 'nrs')", metavar='namespace', type=str)
+  # Login
+    sub_parser = subparser.add_parser("login", help="Login with email and password")
+ 
+    sub_parser.add_argument('-u', dest='user', help='user.  If this argument is not passed it will be requested.')
+    sub_parser.add_argument('-p', dest='password', help='password.  If this argument is not passed it will be requested.')             
+    parser.add_argument("-", "--command",  dest="command", required=True,  help="specify the action/command to run - createuser, createbuckets, listuser, listbucket", metavar="string", type=str)
+    parser.add_argument("-r", "--replicationgroup",  dest="replication_group", default="urn:storageos:ReplicationGroupInfo:4759217e-b060-4abb-a100-6a50686d6cf8:global", required=False, help="replication group with the DELL APplicance (default is 'urn:storageos:ReplicationGroupInfo:4759217e-b060-4abb-a100-6a50686d6cf8:global'", metavar='string', type=str)
+    parser.add_argument("-ou", "--objectuser",  dest="objectuser", required=False, help="Object User to Create if function is set to 'createUser'", metavar='string', type=str)
+    parser.add_argument("-n", "--namespace",  dest="namespace", default="nrs", required=False, help="namespace to access in object storage (default is 'nrs')", metavar='String', type=str)
     
     parser.add_argument('--encrypt', dest='encryption_enabled', action='store_true')
     parser.add_argument('--no-encrypt', dest='encryption_enabled', action='store_false')
     parser.set_defaults(encryption_enabled=False)
 
-    parser.add_argument("-e", "--endpoint",  dest="endpoint", default="https://mgmt.objectstore.gov.bc.ca:4443", required=False, help="REST Endpoint to access DELL management API (default is 'https://mgmt.objectstore.gov.bc.ca:4443')", metavar='rest admin Endpoint', type=str)
-
+    parser.add_argument("-e", "--endpoint",  dest="endpoint", default="https://mgmt.objectstore.gov.bc.ca:4443", required=False, help="REST Endpoint to access DELL management API (default is 'https://mgmt.objectstore.gov.bc.ca:4443')", metavar='String', type=str)
     args = parser.parse_args()
     
+    ##################
+    parser = argparse.ArgumentParser(description="command line client")
+    subparser = parser.add_subparsers(dest='command', metavar='command')
+    subparser.required = True
+    parser.set_defaults(funct=argparser_handler)
+
+    args = parser.parse_args()
     args.funct(args)
 
 def argparser_handler(args):
@@ -103,7 +114,7 @@ def login(user, password):
 def adminLogin(user, password, endpoint):
     client = Client('3',
                 username=user,
-                password=password,
+                #password=adminpwd,
                 token_endpoint=endpoint+'/login',
                 cache_token=False,
                 ecs_endpoint=endpoint)
@@ -128,7 +139,7 @@ def createUser(objectuser,namespace, client):
 # create a bucket in the Dell appliance based on command line inputs
 def createBucket(encryption_enabled,replicationgroup,namespace,client):
     print ("Creating DELL ECS Bucket")
-    #bucket_name, replicationgroup='', filesystem_enabled=False, head_type=None, namespace=None, stale_allowed=False,  metadata=None, encryption_enabled=False):
+    #bucket_name, replication_group='', filesystem_enabled=False, head_type=None, namespace=None, stale_allowed=False,  metadata=None, encryption_enabled=False):
     metadata = [{"datatype": "datetime", "name": "CreateTime", "type": "System"},{"datatype": "datetime", "name": "LastModified","type": "System"}, {"datatype": "string", "name": "ObjectName", "type": "System"}, {"datatype": "string", "name": "Owner","type": "System"},{"datatype": "integer", "name": "Size", "type": "System"}]
     #print(metadata)
     

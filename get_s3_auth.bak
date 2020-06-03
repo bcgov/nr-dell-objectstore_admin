@@ -128,7 +128,6 @@ request_url = endpoint + '?' + canonical_querystring
 
 print('\nBEGIN REQUEST++++++++++++++++++++++++++++++++++++')
 print('Request URL = ' + request_url)
-print(f'Headers in the request URL {headers}')
 r = requests.get(request_url, headers=headers)
 
 print('\nRESPONSE++++++++++++++++++++++++++++++++++++')
